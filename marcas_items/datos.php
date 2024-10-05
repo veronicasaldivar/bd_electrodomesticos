@@ -16,6 +16,7 @@ foreach($lista as $key => $list){
 		$datos['data'][$key]['itemmax'] = $list['item_max'];
 		$datos['data'][$key]['estado'] = $list['item_estado'];
 		$datos['data'][$key]['tipoimp'] = $list['tipo_imp_desc'];
+		$datos['data'][$key]['cantuso'] = $list['cantidad_uso'];
 		// $datos['data'][$key]['estado'] = $list['timb_estado'];
                 
 		

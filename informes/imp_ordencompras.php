@@ -1,8 +1,7 @@
 ﻿<?php
-
 require "../funciones/fpdf/fpdf.php";
-
 require "../clases/conexion.php";
+
 $id = $_GET["id"];
 $con = new conexion();
 $con->conectar();
@@ -16,10 +15,9 @@ $result2 = pg_query($sql2);
 while ($row = pg_fetch_array($result2)) {
     $det[] = $row;
 }
+// MultiCell($w, $h, $txt, $border=0, $align='J', $fill=0, $ln=1, $x='', $y='', $reseth=true, $stretch=0, $ishtml=false, $autopadding=true, $maxh=0)
 
-
-
-
+//Cell($w, $h=0, $txt='', $border=0, $ln=0, $align='', $fill=0, $link='', $stretch=0, $ignore_min_height=false, $calign='T', $valign='M')
 
 $con->destruir();
 class PDF extends FPDF
@@ -27,78 +25,97 @@ class PDF extends FPDF
 // Tabla simple
     function ordencompras($cab,$det)
     {
-      //  $this->Image('../img/INFORMES.JPG',60,11,80,25,'JPG');
-        $this->Cell(165,30,"");
+        // Nombre de la empresa y movimiento al que corresponde
+        $this->SetFont('Times', 'B', 12);//TIPO DE LETRA PARA TITULO
+        $this->Cell(/*1*/90, /*2*/10, /*3*/$cab['emp_nom'], /*4*/'LTR', /*5*/0, /*6*/'C');
+        $this->Cell(/*1*/90, /*2*/10, /*3*/'ORDEN DE COMPRA', /*4*/'LTR', /*5*/0, /*6*/'C');
         $this->Ln();
-        $this->Cell(165,10,"Ordenes de Compras");
+        
+        // DIRECCION Y RUC DE LA EMPRESA
+        $this->SetFont('Times', '', 10);//TIPO DE LETRA PARA SUBTITULO
+        $this->Cell(/*1*/35, /*2*/8, /*3*/utf8_decode('Dirección:'), /*4*/'L', /*5*/0, /*6*/'L');
+        $this->Cell(/*1*/55, /*2*/8, /*3*/utf8_decode($cab['emp_dir']), /*4*/'R', /*5*/0, /*6*/'L');
+            
+        $this->Cell(/*1*/35, /*2*/5, /*3*/utf8_decode('RUC: '), /*4*/'L', /*5*/0, /*6*/'L');
+        $this->Cell(/*1*/55, /*2*/5, /*3*/utf8_decode($cab['emp_ruc']), /*4*/'R', /*5*/0, /*6*/'L');
         $this->Ln();
 
-       $this->Cell(20,6,utf8_decode('Pedido N°: '));
-        $this->Cell(33,6,$cab["orden_nro"]);
-          $this->Cell(15,6,utf8_decode('Fecha: '));
-        $this->Cell(30,6,$cab["orden_fecha"]);
+        // TELEFONO Y NUMERO DE ORDEN
+        $this->SetFont('Times', '', 10);//TIPO DE LETRA PARA SUBTITULO
+        $this->Cell(/*1*/35, /*2*/8, /*3*/utf8_decode('Teléfono:'), /*4*/'L', /*5*/0, /*6*/'L');
+        $this->Cell(/*1*/55, /*2*/8, /*3*/utf8_decode($cab['emp_tel']), /*4*/'R', /*5*/0, /*6*/'L');
+            
+        $this->Cell(/*1*/35, /*2*/5, /*3*/utf8_decode('Orden N.°: '), /*4*/'L', /*5*/0, /*6*/'L');
+        $this->Cell(/*1*/55, /*2*/5, /*3*/utf8_decode($cab['orden_nro']), /*4*/'R', /*5*/0, /*6*/'L');
         $this->Ln();
-        $this->Cell(15,6,utf8_decode('Estado: '));
-        $this->Cell(30,6,$cab["orden_estado"]);
+
+        //CUARTA LINEA
+        $this->Cell(/*1*/35, /*2*/8, /*3*/utf8_decode('Correo: '), /*4*/'LB', /*5*/0, /*6*/'L');
+        $this->Cell(/*1*/55, /*2*/8, /*3*/utf8_decode($cab['emp_email']), /*4*/'RB', /*5*/0, /*6*/'L');
+
+        $this->Cell(/*1*/90, /*2*/8, /*3*/'', /*4*/'RB', /*5*/0, /*6*/'L');
         $this->Ln();
-        $this->Cell(20,6,utf8_decode('Cuotas: '));
-        $this->Cell(9,6,$cab["orden_cuotas"]);
-        $this->Cell(18,6,utf8_decode('Plazo: '));
-        $this->Cell(70,6,$cab["orden_plazo"]);
-        $this->Ln();
-        $this->Cell(18,6,utf8_decode('Empresa: '));
-        $this->Cell(15,6,$cab["emp_nom"]);
-        $this->Ln();
-        // $this->Cell(9,6,utf8_decode('RUC: '));
-        // $this->Cell(18,6,$cab["emp_ruc"]);
-        // $this->Ln();
-        $this->Cell(18,6,utf8_decode('Direccion: '));
-        $this->Cell(15,6,utf8_decode($cab["emp_dir"]));
-        $this->Ln();
-        $this->Cell(15,6,utf8_decode('Email: '));
-        $this->Cell(50,6,utf8_decode($cab["emp_email"]));
-        $this->Ln();
-        $this->Cell(18,6,utf8_decode('Proveedor: '));
-        $this->Cell(40,6,$cab["prov_nombre"]);
-        $this->Cell(15,6,utf8_decode('RUC: '));
-        $this->Cell(25,6,$cab["prov_ruc"]);
-        $this->Cell(18,6,utf8_decode('Direccion: '));
-        $this->Cell(50,6,$cab["prov_dir"]);
-            $this->Ln();
-        $this->Cell(18,6,utf8_decode('Email: '));
-        $this->Cell(15,6,$cab["per_email"]);
-         $this->Ln();
-        $this->Cell(25,6,utf8_decode('Tipo Factura: '));
-        $this->Cell(100,6,$cab["tipo_fact_desc"]);
         
+        //FECHA DE EMISION Y ESTADO
+        $this->Cell(/*1*/35, /*2*/8, /*3*/utf8_decode('Fecha de Emisión:'), /*4*/'LB', /*5*/0, /*6*/'L');
+        $this->Cell(/*1*/55, /*2*/8, /*3*/utf8_decode($cab['orden_fecha']), /*4*/'B', /*5*/0, /*6*/'L');
+
+        $this->Cell(/*1*/35, /*2*/8, /*3*/utf8_decode('Estado:'), /*4*/'B', /*5*/0, /*6*/'L');
+        $this->Cell(/*1*/55, /*2*/8, /*3*/utf8_decode($cab['orden_estado']), /*4*/'BR', /*5*/0, /*6*/'L');
         $this->Ln();
+
+        // // TIPO FACTURA, CUOTAS Y PLAZOS
+        // $this->Cell(/*1*/35, /*2*/8, /*3*/utf8_decode('Tipo de Factura:'), /*4*/'LB', /*5*/0, /*6*/'L');
+        // $this->Cell(/*1*/55, /*2*/8, /*3*/utf8_decode($cab['tipo_fact_desc']), /*4*/'B', /*5*/0, /*6*/'L');
+
+        // $this->Cell(/*1*/20, /*2*/8, /*3*/utf8_decode('Cuotas:'), /*4*/'B', /*5*/0, /*6*/'L');
+        // $this->Cell(/*1*/10, /*2*/8, /*3*/utf8_decode($cab['orden_cuotas']), /*4*/'B', /*5*/0, /*6*/'L');
+        
+        // $this->Cell(/*1*/20, /*2*/8, /*3*/utf8_decode('Plazo:'), /*4*/'B', /*5*/0, /*6*/'L');
+        // $this->Cell(/*1*/10, /*2*/8, /*3*/utf8_decode($cab['orden_plazo']), /*4*/'B', /*5*/0, /*6*/'L');
+        
+        // $this->Cell(/*1*/30, /*2*/8, /*3*/'', /*4*/'RB', /*5*/0, /*6*/'L');
+        // $this->Ln();
+        
+        // NOMBRE O RAZON SOCIAL Y RUC DEL PROVEEDOR
+        $this->Cell(/*1*/40, /*2*/8, /*3*/utf8_decode('Nombre o Razón Social:'), /*4*/'L', /*5*/0, /*6*/'L');
+        $this->Cell(/*1*/140, /*2*/8, /*3*/utf8_decode($cab['prov_nombre']), /*4*/'R', /*5*/0, /*6*/'L');
         $this->Ln();
+
+        $this->Cell(/*1*/20, /*2*/8, /*3*/utf8_decode('RUC:'), /*4*/'LB', /*5*/0, /*6*/'L');
+        $this->Cell(/*1*/70, /*2*/8, /*3*/utf8_decode($cab['prov_ruc']), /*4*/'B', /*5*/0, /*6*/'L');
+        
+        $this->Cell(/*1*/90, /*2*/8, /*3*/'', /*4*/'RB', /*5*/0, /*6*/'L');
         $this->Ln();
-        //Titulo
-        $header = array('Codigo','Cantidad','Descripcion','Precio','Subtotal');
+
+        // DETALLES DE LA ORDEN DE COMPRA - Titulo
+        $header = array('Codigo','Cantidad','Descripción');
         // Cabecera
-        $this->Cell(14,7,$header[0],1);
-        $this->Cell(20,7,$header[1],1);
-        $this->Cell(100,7,$header[2],1);
-        $this->Cell(25,7,$header[3],1);
-        $this->Cell(25,7,$header[4],1);
+        $this->Cell(15,15,$header[0],1);
+        $this->Cell(15,15,$header[1],1);
+        $this->Cell(150,15,utf8_decode($header[2]),1);
+        // $this->Cell(25,15,$header[3],1);
+        // $this->Cell(25,15,$header[4],1);
         $this->Ln();
         // Datos
         $total = 0;
         foreach($det as $row)
         {
             $subtotal = $row["orden_cantidad"] * $row["orden_precio"];
-            $total = $total + $subtotal;
-            $this->Cell(14,6,$row["item_cod"],2);
-            $this->Cell(20,6,$row["orden_cantidad"],2);
-            $this->Cell(100,6,$row["item_desc"],2);
-            $this->Cell(25,6,number_format($row["orden_precio"],0,',','.'),2);
-            $this->Cell(25,6,number_format($subtotal,0,',','.'),2);
-            $this->Ln();
+           // $total = $total + $subtotal;
+            $this->Cell(/*1*/15, /*2*/6, /*3*/utf8_decode($row['item_cod']), /*4*/1, /*5*/0, /*6*/'C');
+            $this->Cell(/*1*/15, /*2*/6, /*3*/utf8_decode($row['orden_cantidad']), /*4*/1, /*5*/0, /*6*/'R');
+                $this->SetFont('Times', '', 8);//TIPO DE LETRA PARA SUBTITULO
+            $this->Cell(/*1*/150, /*2*/6, /*3*/utf8_decode($row['item_desc'] . ' '. $row['mar_desc']), /*4*/1, /*5*/1, /*6*/'LR');
+
+            //     $this->SetFont('Times', '', 10);//TIPO DE LETRA PARA SUBTITULO
+            // $this->Cell(/*1*/25, /*2*/6, /*3*/number_format($row["orden_precio"],0,',','.'), /*4*/1, /*5*/0, /*6*/'R');
+            // $this->Cell(/*1*/25, /*2*/6, /*3*/number_format($subtotal,0,',','.'), /*4*/1, /*5*/1, /*6*/'R');
+
         }
-        $this->Cell(159,6,'Totales',1);
-        $this->Cell(25,6,number_format($total,0,',','.'),1);
-        $this->Ln();
+        // $this->Cell(155,6,'Totales',1);
+        // $this->Cell(/*1*/25, /*2*/6, /*3*/number_format($total,0,',','.'), /*4*/1, /*5*/1, /*6*/'R');
+        // $this->Ln();
     }
 }
 $pdf = new PDF();
@@ -108,16 +125,3 @@ $pdf->AddPage();
 $pdf->ordencompras($cab,$det);
 $pdf->Output();
 ?>
-
-
-<!-- Sintaxis para el ciclo while!!!
-
-
-$i=0;
-while($i < 10){
-    echo $i;
-    $i++;    
-}
-
-
--->

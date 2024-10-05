@@ -2,8 +2,7 @@
 //FUNCIONA TODO!!
 //alert(" hola eli ");
 $(function(){
-var Path ='imp_pedidocompras.php';
-//alert(" Hola !! ");
+var Path ='imp_ordenestrabajos.php';
 var tabla = $('#tabla').dataTable( {
         "columns": [
             {
@@ -34,16 +33,11 @@ var tabla = $('#tabla').dataTable( {
     } );
 
     if(tabla != 'error'){
-
         tabla.fnReloadAjax('datos.php');
     }
 
-
- 
-
- var detailRows = [];
-      
-   $('#tabla tbody').on( 'click', 'tr td.details-control', function () {        
+    var detailRows = [];
+    $('#tabla tbody').on( 'click', 'tr td.details-control', function () {        
         var tr = $(this).closest('tr');
         var row = $('#tabla').DataTable().row( tr );
         var idx = $.inArray( tr.attr('id'), detailRows );
@@ -54,8 +48,7 @@ var tabla = $('#tabla').dataTable( {
             $(this).html("<a><span class='fa fa-plus'></span></a>");
             // Remove from the 'open' array
             detailRows.splice( idx, 1 );
-        }
-        else {
+        }else {
             
             tr.addClass( 'details' );
             row.child(format(row.data())).show();
@@ -64,84 +57,21 @@ var tabla = $('#tabla').dataTable( {
             }
             $(this).html("<a><span class='fa fa-minus'></span></a>");
             // Add to the 'open' array
-           
         }
-    } );
+    });
  
     // On each draw, loop over the `detailRows` array and show any child rows
     tabla.on( 'draw', function () {
         $.each( detailRows, function ( i, cod ) {
             $('#'+cod+' td.details-control').trigger( 'click' );
-        } );
-    } );
- 
-    //ESTE SERA UTILIZADO EN VENTAS 
-// function format ( d )
-// { 
-//     // `d` is the original data object for the row
-//     var deta ='<table  class="table table-striped table-bordered nowrap table-hover">\n\
-// <tr width=80px class="info"><th>Codigo</th><th>Descripcion</th><th>Marca</th><th>f_fin</th><th>f_ini Unitario</th><th>Subtotal</th></tr>';
-//     var total=0;
-//     var totalgral = (f_ini);
-//      for(var x=0;x<d.detalle.length;x++){
-//          subtotal = d.detalle[x].f_fin * d.detalle[x].f_ini;
-//          total += parseInt(subtotal);
-
-//         deta+='<tr>'+
-//             '<td width=10px>'+d.detalle[x].codigo+'</td>'+
-//             '<td width=80px>'+d.detalle[x].descripcion+'</td>'+
-//              '<td width=50px>'+d.detalle[x].marca+'</td>'+
-//             '<td width=50px>'+d.detalle[x].f_fin+'</td>'+
-            
-//             '<td width=50px>'+d.detalle[x].f_ini+'</td>'+
-//             '<td width=10px>' + subtotal + '</td>' +
- 
-
-//         '</tr>';
-//         }
-//     deta+= '</tbody>' +
-//         '<tfoot>' +
-//         '<tr>' +
-//         '<td></td>' +
-//         '<td></td>' +
-//         '<td></td>' +
-//         '<td></td>' +
-//         '<td></td>' +
-//          '<td></td>' +
-//         '</tr>' +
-//         '<tr>' +
-//         '<td>Total</td>' +
-//         '<td></td>' +
-//         '<td></td>' +
-//          '<td></td>' +
-//         '<td></td>' +
-//         '<td>'+ total +' Gs.</td>' +
-//         // totales += "<th style=\"text-align: right;\"><h4>"+ totalgral.toLocaleString() +"</h4></th>";
-//         '</tr>' +
-//         '</tfoot>' +
-//         '</table></center>';
-
-//    return deta+'<tfoot><tr><th colspan="5" class="text-center" ></th></tr></tfoot></table>\n\
-//                 <div class="row">'+                
-                        
-//                  '<div class="col-md-2">' +
-//                     '<div class="col-md-12 pull-center">'+
-                       
-//                    '<a href="../informes/'+Path+'?id='+d.cod+'" target="_blank" class="btn btn-sm btn-primary btn-block" id="print" ><span class="fa fa-print"></span><b> Imprimir</b></a>'+
-//                    //'<a href="'+Path+'?id='+d.cod+'" target="_blank" class="btn btn-sm btn-info btn-block" id="print" ><span class="fa fa-print"></span><b> Imprimir</b></a>'+
-                    
-//                 '</div>'+
-
-//                 '</div>';
-// }
-
-//ESTE SERA UTILIZADO EN VENTAS FIN 
+        });
+    });
 
 function format(d) {
     // `d` is the original data object for the row
     var deta =
       '<table  class="table table-striped table-bordered nowrap table-hover">\n\
-<tr width=80px class="info"><th>Codigo</th><th>Tipo Servicio</th><th>Hora desde</th><th>Hora hasta</th><th>Sugerencias</th><th>Precio</th><th>Subtotal</th></tr>';
+    <tr width=80px class="info"><th>Codigo</th><th>Tipo Servicio</th><th>Hora desde</th><th>Hora hasta</th><th>Sugerencias</th><th>Precio</th><th>Subtotal</th></tr>';
     var total = 0;
     var subtotal = 0;
     for (var x = 0; x < d.detalle.length; x++) {
@@ -211,7 +141,6 @@ function format(d) {
       "?id=" +
       d.cod +
       '" target="_blank" class="btn btn-sm btn-info btn-block" id="print" ><span class="fa fa-print"></span><b> Imprimir</b></a>' +
-      //'<a href="'+Path+'?id='+d.cod+'" target="_blank" class="btn btn-sm btn-info btn-block" id="print" ><span class="fa fa-print"></span><b> Imprimir</b></a>'+
 
       "</div>" +
       "</div>"
@@ -219,9 +148,8 @@ function format(d) {
   }
 
 
-//INICIO PRIMERA GRILLA
-// INSERTAR GRILLA1 DE ORDEN DE TRABAJO
-  $(document).on("click",".agregar",function(){
+    //INICIO PRIMERA GRILLA
+    $(document).on("click",".agregar",function(){
             $("#detalle-grilla").css({display:'block'});
             var servicios = $('#serv option:selected').html();
             var servcod = $('#serv').val();
@@ -308,12 +236,9 @@ function format(d) {
         $("#f_fin2").val('');
         $("#fun").focus();
     });
-//FIN PRIMERA GRILLA
+    //FIN PRIMERA GRILLA
 
-
-
-
-      $(document).on("click",".eliminar",function(){
+    $(document).on("click",".eliminar",function(){
         var parent = $(this).parent();
         $(parent).remove();
         // cargargrilla();
@@ -321,41 +246,26 @@ function format(d) {
        
 
 
-//PRUEBA
+    //INSERTAR
      $(document).on("click","#grabar",function(){
-        //declaramos las variables que vamos a enviar a nuestro SP
-        var nro,sucursal,empresa,funcionario,detalle,usuario, cliente, inicio, fin;
-        // nro = $("#nro").val();
-        sucursal = $("#sucursal").val();
+        var sucursal,funcionario,detalle,usuario, cliente, inicio, fin;
+        sucursal    = $("#sucursal").val();
         funcionario = $("#funcionario").val();
-        cliente = $("#cliente").val();
-        inicio = $("#hdesde").val();
-        fin = $("#hhasta").val();
-        usuario = $("#usuario").val();
-         
-        //la variable detalle va a tener un valor inicial de "{"
+        cliente     = $("#cliente").val();
+        inicio      = $("#hdesde").val();
+        fin         = $("#hhasta").val();
+        usuario     = $("#usuario").val();
+        resercod    = $("#reservas").val();
         detalle="{";
-        //recorremos nuestra grilla
         $("#grilladetalle tbody tr").each(function(index) {
-               //declaramos variables campo 1 y campo3
-               //para grabar valores especificos de las columnas de nuestro interes;
             var campo1, campo2,campo3, campo4, campo5, campo6;
-            // Y a la variable detalle le concatenamos una {
             detalle = detalle + '{';
-              //y recorremos todos los hijos inmediatos "td" del objeto "this" (en este caso "this" hace referencia a la fila(tr))
             $(this).children("td").each(function(index2) {
-                //comparamos los casos posibles con la funcion switch que recibe
-                //como parametro index2 (posicion de la columna)
                 switch (index2) {
-                    //en el caso que index2 sea 1
                     case 1:
-                        //capturamos el valor de la columna 1 y le asignamos ese valor a la variable campo1
                         campo1 = $(this).text();//codigo item
-                        //y concatenamos al valor de detalle, el valor de campo1 mas ','
                         detalle = detalle + campo1 + ',';
-                        //y finalizamos la ejecucion del caso
                         break;
-
                     case 3:
                         campo2 = $(this).text();//precio
                        detalle = detalle + campo2 +  ',';
@@ -378,102 +288,78 @@ function format(d) {
                         campo6 = campo6[0];
                         detalle = detalle + campo6;
                         break;
-
                 }
             });
-            //index equivale a tr, es decir el numero de la posicion de una determinada fila. ej: tr(0),tr(1),tr(2)...tr(n);
-            //Entonces decimos, si index es menor a la longitud de filas de la tabla con id grilla -1 (menos una unidad)
-            //Obs: Restamos una unidad a la longitud por que la longitud empieza contando a partir de uno (1), recordemos que 
-            //las posiciones de las filas empiezan contando a partir de cero. ej: tr(0) 
             if (index < $("#grilladetalle tbody tr").length - 1) {
-                //si cumple la condicion, concatenamos al valor actual de detalle el siguiente valor '},'
                 detalle = detalle + '},';
             } else {
-                //si no es asi, concatenamos a detalle el valor '}' y damos fin al recorrido
                 detalle = detalle + '}';
             }
         });
-        //al valor actual de detalle concatenamos '}'
-        //obteniendo asi el valor final de detalle.
         detalle= detalle + '}';
-
-        // alert(detalle);
-        
-        //Y decimos, si detalle es distinto de {} y cliente sea distinto de vacio
         if(detalle!=="{}"){
-            //realizamos la peticion
-        $.ajax({
-            //definimos el tipo 
-           type: "POST",
-           //la ruta
-           url: "grabar.php",
-           //y por ultimo los datos a enviar
-           data: {codigo:0,sucursal:sucursal,cliente:cliente,usuario:usuario, detalle:detalle,ope:1}
-           // 	ORDEN: codigo, succod, clicod, usucod, detalle[itemcod, ordenprecio, hdesde, hhasta, ord_desc],  operacion
-        }).done(function(msg){
-            //por ultimo capturamos la respuesta y lo mostramos en un alert,
-            humane.log("<span class='fa fa-check'></span> "+msg, { timeout: 4000, clickToClose: true, addnCls: 'humane-flatty-success' });
-            //vaciamos la tabla
-        $("#grilla tbody tr").remove();
-        //y vaciamos todos los campos
-        $('#cliente > option[value=""]').attr('selected',true);
-        $('#cliente').selectpicker('refresh');
-        vaciar();
-        $("#total").html('Total: 0.00 Gs.');
-        //solicitamos el ultimo codigo actual
-        ultcod();
-        //y los datos actualizados de la lista de pedidos
-        refrescarDatos();
-        });
+            $.ajax({
+            type: "POST",
+            url: "grabar.php",
+            data: {codigo:0,sucursal:sucursal,cliente:cliente,usuario:usuario, detalle:detalle,ope:1}
+            // 	ORDEN: codigo, succod, clicod, usucod, detalle[itemcod, ordenprecio, hdesde, hhasta, ord_desc],  operacion
+            }).done(function(msg){
+                var r = msg.split("_/_");
+                var  tipo = r[1];
+                if(tipo.trim()== 'notice'){
+                    $.ajax({
+                        type: 'POST',
+                        url: 'actualizar_reservas.php',
+                        data:{resercod:resercod}
+                    }) 
+                }
+                mostrarMensaje(msg)
+                vaciar();
+                ultcod();
+                refrescarDatos();
+            });
         
-    //si solamente el cliente esta vacio
-    }else if(cliente===""){
-       //notificamos al usuario que debe completar el campo
-        humane.log("<span class='fa fa-info'></span> Complete todos los campos", { timeout: 4000, clickToClose: true, addnCls: 'humane-flatty-warning' });
-    //si no se cumple ninguna condicion, quiere decir que el detalle esta vacio    
-    }else{
-        //notificamos al usuario que debe completar el campo
-        humane.log("<span class='fa fa-info'></span> Debe agregar detalle", { timeout: 4000, clickToClose: true, addnCls: 'humane-flatty-warning' });
-    }
-        
+        }else if(cliente===""){
+            humane.log("<span class='fa fa-info'></span> Complete todos los campos", { timeout: 4000, clickToClose: true, addnCls: 'humane-flatty-success' });
+        }else{
+            humane.log("<span class='fa fa-info'></span> Debe agregar detalle", { timeout: 4000, clickToClose: true, addnCls: 'humane-flatty-warning' });
+        }
     });
-
+    // FIN INSERTAR
     
-// Insert 
-$(document).on("click",".delete",function(){
+    // ANULAR
+    $(document).on("click",".delete",function(){
         var pos = $( ".delete" ).index( this );
         $("#tabla tbody tr:eq("+pos+")").find('td:eq(1)').each(function () {
             var cod;
             cod = $(this).html();
             $("#delete").val(cod);
-             $(".msg").html('<h4 class="modal-title" id="myModalLabel">Desea eliminar la Reserva de Turno  Nro. '+cod+' ?</h4>');
+            $(".msg").html('<h4 class="modal-title" id="myModalLabel">Desea eliminar la Orden de trabajo Nro. '+cod+' ?</h4>');
         });
     });
-        //esta parte es para que al hacer clic pueda anular
+
     $(document).on("click","#delete",function(){
         var id = $( "#delete" ).val();
         $.ajax({
             type: "POST",
             url: "grabar.php",
-            data: {codigo:id,nro:0,emp:0,suc:0,fun:0,inicio:0,fin:0,detalle:'{{}}',detal:'{{}}',ope:'anulacion'}
+            data: {codigo:id, sucursal:0, cliente:0, usuario:0, detalle:'{}',ope: 3}
         }).done(function(msg){
-          // $('#confirmacion').modal("hide");
-              $("#hide").click();
-            humane.log("<span class='fa fa-check'></span> "+msg, { timeout: 4000, clickToClose: true, addnCls: 'humane-flatty-success' });    
-            //  refrescarDatos();
+            $("#hide").click();
+            mostrarMensaje(msg);
+            refrescarDatos();
         });
 
     });
-            ///FUNCION Anular
+    ///FUNCION ANULAR
 
- $("#item").change(function(){
+    $("#item").change(function(){
         marca();
         f_ini();
-        
         stock();
     });
 
-function marca(){
+    function marca(){
         var cod = $('#item').val();
         $.ajax({
             type: "POST",
@@ -505,6 +391,12 @@ function marca(){
         $("#hhasta").val("");
         $("#des").val("");
         $("#precio").val("")
+
+        $("#grilla tbody tr").remove();
+        $('#cliente > option[value=""]').attr('selected',true);
+        $('#cliente').selectpicker('refresh');
+        $("#total").html('Total: 0.00 Gs.');
+        $("#reservas").val(0).trigger('change');
     }
 
     $("#serv").change(function(){
@@ -518,13 +410,10 @@ function marca(){
         })
     });
 
-    $(document).on("click",".ordenar",function(){
-        let pos = $(".ordenar").index(this);
-        let cod;
-        $("#tabla tbody tr:eq("+pos+")").find("td:eq(1)").each(function(){
-            cod = $(this).html();
-            // alert(`Este es el valor ${cod}`);
-             hola(cod);
+    $("#reservas").change(function (){
+        let cod = $(this).val();
+        if(cod > 0){
+            reservasDetalles(cod);
             $.ajax({
                 type: 'POST',
                 url: 'reservasdetalles.php',
@@ -534,11 +423,10 @@ function marca(){
                 $("#grilladetalle > tbody tr").remove();
                 $("#grilladetalle > tbody").append(datos.filas)
             })
-        })
-
+        }
     })
-    function hola(codigo){
-        // alert(codigo);
+
+    function reservasDetalles(codigo){
         $.ajax({
             type: 'POST',
             url: 'reservascabecera.php',
@@ -596,8 +484,6 @@ $("#hdesde").focusout(function() {
         }
       })
         .done(function(msg) {
-
-          // console.log(msg);
           var r = msg.split("_/_");
           // console.log(`Este es la respuesta partida ${r}`);
           var texto = r[0];
@@ -640,16 +526,14 @@ $("#hdesde").focusout(function() {
     }
   }
 
-  function traerdia(){
+    function traerdia(){
         var dia = $("#freserva").val();
         $.ajax({
         type: 'POST',
         url: 'traerdia.php',
         data: {dia:dia}
         }).done(function(msg){
-            // alert(`El dia traido es ${msg}`)
-        $("#dia").val(msg);
-
+            $("#dia").val(msg);
         })
     }
 
@@ -664,11 +548,32 @@ $("#hdesde").focusout(function() {
 
     function refrescarDatos(){
       tabla.fnReloadAjax();
-  };
-// Funciones
-$(function () {
-    $(".chosen-select").chosen({width: "100%"});
-});
+    };
+
+    function mostrarMensaje(msg){
+        var r = msg.split("_/_");
+        var texto = r[0];
+        var tipo = r[1];
+
+        if(tipo.trim() == 'notice'){
+            texto = texto.split("NOTICE:");
+            texto = texto[1];
+
+            humane.log("<span class='fa fa-check'></span>"+ texto, {timeout: 4000, clickToClose: true, addnCls: 'humane-flatty-success'});
+            // humane.log("<span class='fa fa-check'></span> " + msg, {timeout: 4000, clickToClose: true, addnCls: 'humane-flatty-success'});
+        }
+        if(tipo.trim() == 'error'){
+            texto = texto.split("ERROR:");
+            texto = texto[2];
+
+            humane.log("<span class='fa fa-info'></span>"+ texto, {timeout: 4000, clickToClose: true, addnCls: 'humane-flatty-error'});
+        }
+    }
+
+    // Funciones
+    $(function () {
+        $(".chosen-select").chosen({width: "100%"});
+    });
 
 });
 

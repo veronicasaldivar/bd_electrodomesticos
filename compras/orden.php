@@ -1,14 +1,10 @@
 <?php
 require "../clases/conexion.php";
-
-//print_r($_POST['cuenta']);
-//die;
 $orden = $_POST['orden']; 
 $con = new conexion();
 $con->conectar();
 $sql = pg_query("select * from v_ordenes_compras_det where (select orden_estado from ordcompras_cab where orden_nro = '$orden') = 'PENDIENTE' and orden_nro = '$orden' ");
 $pedidos = pg_fetch_all($sql); 
-
 
 // $sql3 = pg_query("select * from sucursales  order by suc_cod");
 // $sucursal = pg_fetch_all($sql3);
@@ -16,8 +12,6 @@ $pedidos = pg_fetch_all($sql);
 // foreach ($sucursal as $key => $s) {
 // 	$select_sucursal = $select_sucursal."<option value=\"$s[suc_cod]\">".$s["suc_cod"].'-'. $s["suc_nom"]."</option>";
 // }
-
-
 $sql2 = pg_query("select * from v_depositos where dep_estado = 'ACTIVO' order by dep_cod");
 $deposito = pg_fetch_all($sql2); 
 
@@ -41,8 +35,9 @@ foreach ($pedidos as $key => $pedido) {
 	$data['filas'] .= '<td>'.$pedido['mar_cod'].' - '.$pedido['mar_desc'].'</td>';
 	$data['filas'] .= '<td>'.number_format($pedido['orden_cantidad'],0,',','').'</td>';
 	
-	$data['filas'] .= '<td>'.$pedido['orden_precio'].'</td>';
-	$data['filas'] .= '<td>'.number_format($subtotal,0,',','').'</td>';
+	$data['filas'] .= '<td width="10%"><input class="form-control" type="text" id="costoid'.$pedido["item_cod"].$pedido["mar_cod"].'" value="'.$pedido['orden_precio'].'"></td>';
+	$data['filas'] .= '<td width="10%"><input class="form-control" type="text" id="precioid'.$pedido["item_cod"].$pedido["mar_cod"].'" value="'.$pedido['orden_precio'].'"></td>';
+	$data['filas'] .= '<td>'.number_format(0,0,',','').'</td>';
 	// $data['filas'] .= '<td width="15%"><select class="grilla form-control" id="sucid'.$pedido["item_cod"].'">'.$select_sucursal.'</select></td>';
 	$data['filas'] .= '<td width="20%"><select class="form-control" id="ordenid'.$pedido["item_cod"].'">'.$select_deposito.'</select></td>';
 	// $data['filas'] .= '<td class="eliminar"><input type="button" value="Х" id="bf"   class="bf"  style="background:  pink; color: black;"/></td>';
@@ -50,3 +45,5 @@ foreach ($pedidos as $key => $pedido) {
 }
 echo json_encode($data);
 return json_encode($data);
+
+?>

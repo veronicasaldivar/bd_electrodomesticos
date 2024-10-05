@@ -1,8 +1,5 @@
-    //alert(" llamando!! ");
-//esta parte es para que al hacer clic se posicione y me muestre el mensaje de anular
-    
-//alert(" llamando!! ");
-    $(document).ready(function() {
+
+$(document).ready(function() {
         var Path = 'imp_ventas.php';
         var dt = $('#tabla').dataTable({
         "columns": [
@@ -21,8 +18,6 @@
             { "data": "usuario" },
             {"data": "acciones"}
         ]
-
-
     });
     dt.fnReloadAjax('datos.php');
     
@@ -44,8 +39,7 @@ $(document).on("click", "#delete", function () {
     $.ajax({
         type: "POST",
         url: "grabar.php",
-        // data: {codigo:codigo, ope: 'anulacion'}
-        data: {codigo:codigo, nro: 0, empresa: 0, sucursal: 0, usuario: 0, funcionario: 0, cliente: 0, tipofact: '', plazo:'', cuotas: '', timbrado:0,apercier:1,cboiddeposito:0, detalle: '{{1,1,1}}', detalle2: '{}', ope: 2}
+        data: {codigo: codigo, sucursal: 0, usuario: 0, cliente: 0, tipofact: 0, plazo: 0, cuotas: 0, detalle: '{}', detalle2: '{}', ope:2}
     }).done(function (msg) {
         $('#hide').click();
         // humane.log("<span class='fa fa-check'></span> " + msg, {timeout: 4000, clickToClose: true, addnCls: 'humane-flatty-success'});
@@ -230,8 +224,6 @@ function ultcod(){
         $("#nro").val(cod);
     })
 }
-
-
 
    function cargargrilla() {
         var salida = '{';
@@ -511,14 +503,13 @@ $("#cliente").change(function(){
 
 $("#ordentrabajo").change(function(){
     var cod = $("#ordentrabajo").val();
-    // alert(`El cod de ordenes trabajos ${cod}`)
     if(cod > 0){
         $.ajax({
             type:'POST',
             url: 'ordenestrabajos.php',
             data:{cod: cod}
         }).done(function(msg){
-            alert(msg)
+            // alert(msg)
             var datos = JSON.parse(msg);
             $("#grilladetalle > tbody").append(datos.filas);
             calcularTotales();
@@ -527,18 +518,17 @@ $("#ordentrabajo").change(function(){
     }
 })
 
+
 $("#pedidoventa").change(function(){
     var codigo = $("#pedidoventa").val();
     var suc = $("#sucursal").val();
-    // alert(`El codigo de pedido es ${codigo}`)
     if(codigo > 0){
         $.ajax({
             type:'POST',
             url: 'pedidoventas.php',
             data:{cod: codigo, suc:suc}
         }).done(function(msg){
-            // alert(msg)
-            if(msg.trim() != 'error'){// si no hay cantidad necesaria en stock
+            if(msg.trim() != 'error'){
                 var datos = JSON.parse(msg);
                 $("#grilladetalle > tbody").append(datos.filas);
                 calcularTotales();
@@ -552,7 +542,6 @@ $("#pedidoventa").change(function(){
 
 $("#cboiddeposito").change(function(){
     item_deposito();
-
     $("#precio").val("0");
     $("#tipoimpuesto").val("");
     $("#stock").val("");
@@ -571,29 +560,25 @@ function item_deposito(){
         }).done(function(msg){
             let data = document.getElementById("item");
             if(msg != "error"){
-                // console.log(msg);
                 let items = JSON.parse(msg);
-                // console.log(items);
                     
                     for(const item of items){
-                        // console.log(prov.prov_timb_nro);
                     const selectItem = document.createElement('OPTION');
                     selectItem.setAttribute('value', item["item_cod"]);
                     selectItem.textContent= `${item.item_desc}`;
 
                     fragment.append(selectItem);
                     }
-
-                        $("#item").children('option').remove();                        
-                        
-                        let primero = document.createElement('OPTION');
-                        primero.setAttribute('value', 0);
-                        primero.textContent = 'Elija una opcion';
-                        
-                        data.insertBefore(primero, data.children[0]);
-                        data.append(fragment);
-                        
-                        $("#item").selectpicker('refresh')
+                    $("#item").children('option').remove();                        
+                    
+                    let primero = document.createElement('OPTION');
+                    primero.setAttribute('value', 0);
+                    primero.textContent = 'Elija una opcion';
+                    
+                    data.insertBefore(primero, data.children[0]);
+                    data.append(fragment);
+                    
+                    $("#item").selectpicker('refresh')
             }else{
                 $("#item").children('option').remove();
 
@@ -603,9 +588,7 @@ function item_deposito(){
                 
                 data.insertBefore(primero, data.children[0]);                
                 $("#item").selectpicker('refresh')
-            }
-           
-                
+            }   
         });
     }else{
         $("#precio").val("0");
@@ -626,16 +609,25 @@ function item_deposito(){
 }
 
 $("#item").change(function(){
-    // getItem();
     marca();
-    // stock();
 });
-    
+
+$("#tipofact").change(function(){
+    if($("#tipofact").val() == 2){
+        $("#plazo").removeAttr("disabled", true);
+        $("#cuotas").removeAttr("disabled", true);
+    }else{
+        $("#plazo").attr("disabled", true);
+        $("#plazo").val(0);
+        $("#cuotas").attr("disabled", true);
+        $("#cuotas").val(0);
+    }
+})
+
 function getStock(){
     var cod = $("#item").val();
     var depcod = $("#cboiddeposito").val();
     if(cod > 0 && depcod > 0){
-        // alert(`El depcod es ${depcod} `)
         $.ajax({
             type: 'GET',
             url: 'stock.php',
@@ -664,10 +656,10 @@ function getItem(){
     }
 }
 
-        function eliminarfila2(parent) {
-            $(parent).remove();
-            calcularTotales();
-        }
+    function eliminarfila2(parent) {
+        $(parent).remove();
+        calcularTotales();
+    }
 
      $(document).on("click",".agregar",function agregar_fila(){
             $("#detalle-grilla").css({display:'block'});
@@ -905,6 +897,7 @@ function marca(){
     function stock(){
         var item = $('#item').val();
         var mar = $("#marcas").val();
+        var dep = $("#cboiddeposito").val()
         var suc = $("#sucursal").val();
         // alert(`este es suc ${suc}`)
         if(item>0 && mar > 0){
@@ -912,7 +905,7 @@ function marca(){
             $.ajax({
                 type: "POST",
                 url: "stock.php",
-                data: {item:item, mar:mar, suc:suc}
+                data: {item:item, mar:mar, dep:dep, suc:suc}
             }).done(function(stock){
                 $("#stock").val(stock);
                 $("#cantidad").focus();

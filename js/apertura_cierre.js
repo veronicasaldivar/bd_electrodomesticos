@@ -38,40 +38,26 @@ var Path ='imp_arqueo.php';
 
 
 //APERTURA DE CAJA
-   
-
     $(document).on("click","#btnsave",function(){     //#btnsave  es el id del boton  guardar
-        var apermonto = $("#apermonto").val();
+        var apermonto = $("#aperturamonto").val();
         var caja = $("#caja").val();
         var usu = $("#usuario").val();
-        // var ciermonto = $("#ciermonto").val();
-        // var sucursal = $("#sucursal").val();
-        // var empresa = $("#empresa").val();
-        // var  funcionario = $("#funcionario").val();
-        
-        if(apermonto!=="",caja !==""){ 
-       // var apermonto,ciermonto,caja,usuario,sucursal,empresa,funcionario;
-         $.ajax({
-            type: "POST",
-            url: "grabar.php",                //grabar: variable, grabar:variable, grabar:variable del sp=en grabar de la  linea  14
-            data: {codigo:0,apermonto:apermonto,caja:caja,usu:usu,ope:1}
-        }).done(function(msg){
-          mostrarMensaje(msg);
-          
-            $("#apermonto").val('');
-            $("#ciermonto").val('');
+    
+        if(apermonto>0 && caja>0){ 
+          $.ajax({
+              type: "POST",
+              url: "grabar.php",                //grabar: variable, grabar:variable, grabar:variable del sp=en grabar de la  linea  14
+              data: {codigo:0,apermonto:apermonto,caja:caja,usu:usu,ope:1}
+          }).done(function(msg){
+            mostrarMensaje(msg);
+            $("#aperturamonto").val('');
             $('#caja > option[value=""]').attr('selected',true);  //combo
-            $("#usuario").val('');
-            $("#sucursal").val('');
-            $("#empresa").val('');
-            $("#funcionario").val('');
-           refrescarDatos();
-           });
+            refrescarDatos();
+          });
         }else{
-         humane.log("<span class='fa fa-check'></span> Por favor complete los datos", { timeout: 4000, clickToClose: true, addnCls: 'humane-flatty-warning' });      
+          humane.log("<span class='fa fa-check'></span> Por favor complete los datos", { timeout: 4000, clickToClose: true, addnCls: 'humane-flatty-warning' });      
         }
-        
-        });
+    });
     
 //FIN APERTURA DE CAJA
 
@@ -98,7 +84,7 @@ $(document).on("click",".confirmar",function(){
       var codigo = $("#delete").val();
       var caja = $("#cod_eliminar").val();
       var usu = $("#usuario").val();
-      alert(`Este es el codigo de caja ha ser cerrado ${caja}`)
+      alert(`Este es el codigo de caja ha ser cerrado ${caja} - ${usu}`)
         $.ajax({
            type: 'POST',
            url: 'grabar.php',   

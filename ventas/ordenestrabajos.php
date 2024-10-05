@@ -46,6 +46,7 @@ foreach($ordentrabajos as $key => $ordentrab){
     $data['filas'].='<td style="text-align: center;">'.$ordentrab['item_cod'].'</td>';
     $data['filas'].='<td style="text-align: left;">'.$ordentrab['item_desc'].'</td>';
     $data['filas'].='<td style="text-align: center;">'.'0'.'</td>';
+    $data['filas'].='<td style="text-align: center;">'.'0'.'</td>';
     $data['filas'].='<td style="text-align: center;">'.'1'.'</td>';
     $data['filas'].='<td style="text-align: right;">'.$ordentrab['orden_precio'].'</td>';
     $data['filas'].='<td style="text-align: right;">'.$exenta.'</td>';

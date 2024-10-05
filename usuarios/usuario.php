@@ -66,10 +66,11 @@ require "../clases/conexion.php";
                                         <div class="form-group">
                                             <label>Nombre</label>
                                                 <select id="fun" class="form-control selectpicker" data-live-search="true" data-size="3">
+                                                    <option value="0">Elija una opcion</option>
                                                     <?php
                                                         $con =  new conexion();
                                                         $con->conectar();
-                                                        $fun = pg_query("select fun_cod, fun_nom from v_funcionarios where fun_cod not in (select fun_cod from usuarios) order by fun_cod");
+                                                        $fun = pg_query("select fun_cod, fun_nom from v_funcionarios order by fun_cod");
                                                         while($i= pg_fetch_assoc($fun)){
                                                             echo "<option value='".$i["fun_cod"]."'>".$i["fun_nom"]."</option>";
                                                         }

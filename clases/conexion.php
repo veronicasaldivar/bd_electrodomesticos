@@ -2,10 +2,10 @@
 class conexion {
     //put your code here
     public $host="localhost";
-    public $db="corregido";
-    public $puerto="5432";
+    public $db="bd_electrodomesticos2";
+    public $puerto="5433";
     public $user="postgres";
-    public $password="123";
+    public $password="1234";
     public $cone;
     public $url;
     public $consulta;
@@ -16,7 +16,7 @@ class conexion {
     }
     //creación de la función para cargar los valores de la conexión.
     public function cargarValores(){
-        $this->cone="host='localhost' dbname='corregido3' port='5432' user='postgres' password='123' ";
+        $this->cone="host='localhost' dbname='bd_electrodomesticos2' port='5433' user='postgres' password='1234' ";
     }
     //función que se utilizara al momento de hacer la instancia de la clase
     function conectar(){

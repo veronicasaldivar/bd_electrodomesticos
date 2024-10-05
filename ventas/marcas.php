@@ -4,7 +4,7 @@ require "../clases/conexion.php";
 $cod = $_POST["cod"];
 $con = new conexion();
 $con ->conectar();
-$sql = pg_query("select mar_desc, mar_cod from v_marcas_items where item_cod =  '$cod' ");
+$sql = pg_query("SELECT mar_desc, mar_cod FROM v_marcas_items WHERE item_cod =  '$cod' ORDER BY mar_cod ");
 
 $verificar = pg_fetch_all($sql);
 

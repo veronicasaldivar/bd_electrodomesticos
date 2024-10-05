@@ -367,13 +367,8 @@ $(function () {
                 data: {cod: 0, feinicio: feinicio, fefin: fefin, usu:usu, suc:suc, prodesc:prodesc, detalle: detalle, ope: 1}
                 // -- 	ORDEN: codigo, promoinicio, promofin, usucod, succod, promodesc, detalle[], operacion
             }).done(function (msg) {
-    
-                humane.log("<span class='fa fa-check'></span> " + msg, {timeout: 4000, clickToClose: true, addnCls: 'humane-flatty-success'});
-                // $("#print").click();
-               // $("#dfecha").val();
-                // $("#feinicio").val();
-                // $("#fefin").val();
-                // $("#detalle").val();
+                mostrarMensaje(msg)
+                // humane.log("<span class='fa fa-check'></span> " + msg, {timeout: 4000, clickToClose: true, addnCls: 'humane-flatty-success'});
                 
                 refrescarDatos();
                  vaciar();
@@ -385,8 +380,7 @@ $(function () {
 
 
 
-// Insert 
-
+    // ANULAR 
     $(document).on("click", ".delete", function () {
         var pos = $(".delete").index(this);
         $("#promociones tbody tr:eq(" + pos + ")").find('td:eq(1)').each(function () {
@@ -402,29 +396,18 @@ $(function () {
         $.ajax({
             type: "POST",
             url: "grabar.php",
-            data: {cod: id, feinicio: '11/11/111', fefin: '11/11/1111', usu:0, suc:0, prodesc:'', detalle: '{}',tipodesc:'', ope: 2}
+            data: {cod: id, feinicio: '11/11/111', fefin: '11/11/1111', usu:0, suc:0, prodesc:'', detalle: '{}',tipodesc:'', ope: 3}
         }).done(function (msg) {
-            // $('#confirmacion').modal("hide");
             $('#hide').click();
-
-            humane.log("<span class='fa fa-check'></span> " + msg, {timeout: 4000, clickToClose: true, addnCls: 'humane-flatty-success'});
+            mostrarMensaje(msg)
+            // humane.log("<span class='fa fa-check'></span> " + msg, {timeout: 4000, clickToClose: true, addnCls: 'humane-flatty-success'});
             refrescarDatos();
-            // location.reload();
         });
 
     });
-//fin  ANULAR
+    // FIN ANULAR
 
-    ///FUNCION Anular
-
-    //esta parte es para que al hacer clic se posicione y me muestre el mensaje de anular
-
-
-
-   function vaciar(){
-        // $("#dfecha").val();
-        // $("#usuario").val();
-        // $("#sucursal").val();
+    function vaciar(){
         $("#feinicio").val("");
         $("#fefin").val("");
         $("#preanterior").val("");
@@ -435,17 +418,15 @@ $(function () {
         $("#grilladetalle tbody tr").remove()
         $("#detalle").val("");
         $("#tipoDescuento").val(0).trigger('change')
+    }
 
-   }
-
-
-   $("#tservicio").change(function(){
+    $("#tservicio").change(function(){
         marca();
         precio2();
-   })
+    })
 
-   $("#marcas").change(function(){
-    precio();
+    $("#marcas").change(function(){
+        precio();
     })
 
 function marca(){
@@ -557,7 +538,25 @@ function precio2(){
         });
     }
 }
+function mostrarMensaje(msg){
+    var r = msg.split("_/_");
+    var texto = r[0];
+    var tipo = r[1];
 
+    if(tipo.trim() == 'notice'){
+        texto = texto.split("NOTICE:");
+        texto = texto[1];
+
+        humane.log("<span class='fa fa-check'></span>"+ texto, {timeout: 4000, clickToClose: true, addnCls: 'humane-flatty-success'});
+        // humane.log("<span class='fa fa-check'></span> " + msg, {timeout: 4000, clickToClose: true, addnCls: 'humane-flatty-success'});
+    }
+    if(tipo.trim() == 'error'){
+        texto = texto.split("ERROR:");
+        texto = texto[2];
+
+        humane.log("<span class='fa fa-info'></span>"+ texto, {timeout: 4000, clickToClose: true, addnCls: 'humane-flatty-error'});
+    }
+}
 
 // Funciones
 });

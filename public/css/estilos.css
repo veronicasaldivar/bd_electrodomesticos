@@ -1,0 +1,11 @@
+/*aumento de tamaño del modal*/
+.tamanoModal{
+    width: 70%;
+}
+tabla#producto_data.dataTable tbody tr:hover {
+    background-color: rgb(230, 230, 23) !important;
+  }
+   
+  tabla#Producto_data.dataTable tbody tr:hover > .sorting_1 {
+    background-color: #ffa !important;
+  }

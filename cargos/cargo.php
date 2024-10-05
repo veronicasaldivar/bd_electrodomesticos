@@ -88,9 +88,6 @@ require "../clases/conexion.php";
                 </div>
                 </div>
 
-
-
-
                 
               <div class="col-md-12">
                 <div class="x_panel">

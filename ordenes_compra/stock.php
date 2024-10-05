@@ -8,5 +8,11 @@ $con = new conexion();
 $con ->conectar();
 $sql = pg_query("SELECT stock_cantidad from v_stock where item_cod = '$item' and mar_cod = '$mar' and suc_cod = '$suc' ");
 $precio = pg_fetch_assoc($sql);
-echo $precio["stock_cantidad"];
+
+// esta es la solucion para cuando te salga una alerta en cantidad de stock 
+if(!empty($precio)){
+    echo $precio["stock_cantidad"];
+}else{
+    echo 0;
+}
 ?>

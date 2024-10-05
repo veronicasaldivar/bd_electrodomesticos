@@ -3,12 +3,11 @@
 require '../clases/conexion.php';
 $cn = new conexion();
 $cn->conectar();
-$sql = pg_query("select * from v_pedidos_ventas_cab where ped_estado='PENDIENTE' order by ped_vcod");
+// $sql = pg_query("SELECT * FROM v_pedidos_ventas_cab WHERE ped_estado='PENDIENTE' ORDER BY ped_vcod DESC");
+$sql = pg_query("SELECT * FROM v_pedidos_ventas_cab ORDER BY ped_vcod DESC");
 $pedventas = pg_fetch_all($sql);
 
-if(!$pedventas){
-    
-}else{
+if (!empty($pedventas)) {
     $button_borrar = '<button type=\'button\' class=\'btn btn-primary  delete pull-right\' data-toggle=\'modal\' data-target=\'#confirmacion\' data-placement=\'top\' title=\'Borrar\'><i class=\'fa fa-minus\'></i></button>';
     $button = $button_borrar;
 
@@ -37,7 +36,17 @@ if(!$pedventas){
             $datos['data'][$key]['detalle'][$key2]['precio'] = $detalle['ped_precio'];
         }
     }
-    echo json_encode($datos);
-    return json_encode($datos);
+} else {
+    $datos['data']['cod'] = '-';
+    $datos['data']['fun_nom'] = '-';
+    $datos['data']['nro'] = '-';
+    $datos['data']['fecha'] = '-';
+    $datos['data']['cli'] = '-';
+    $datos['data']['ruc'] = '-';
+    $datos['data']['usu'] = '-';
+    $datos['data']['estado'] = '-';
+    $datos['data']['acciones'] = '-';
 }
-?>
+
+echo json_encode($datos);
+return json_encode($datos);

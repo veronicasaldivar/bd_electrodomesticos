@@ -11,6 +11,7 @@
         { "data": "itemmin"},
         { "data": "itemmax" },
         { "data": "tipoimp" },
+        { "data": "cantuso" },
         { "data": "estado" },
         { "data": "acciones"}
     ]
@@ -31,12 +32,13 @@
         var precio = $("#precio").val();       
         var min = $("#min").val();       
         var max = $("#max").val();       
+        var cantUso = $("#cantUso").val();       
        
-         if(item > 0 && marca > 0 && costo > 0 && precio > 0 && min > 0 && max > 0 ){ 
+         if(item > 0 && marca > 0 && costo > 0 && precio > 0 && min > 0 && max > 0 && cantUso > 0){ 
               $.ajax({
             type: "POST",
             url: "grabar.php",                
-            data: {item:item,marca:marca,costo:costo,precio:precio,min:min,max:max,ope:1}
+            data: {item:item,marca:marca,costo:costo,precio:precio,min:min,max:max, cantUso:cantUso, ope:1}
         }).done(function(msg){
             humane.log("<span class='fa fa-check'></span> "+msg, { timeout: 4000, clickToClose: true, addnCls: 'humane-flatty-success' });
 
@@ -91,6 +93,7 @@
                 $("#precio_edit").val(dame.precio)
                 $("#min_edit").val(dame.item_min)
                 $("#max_edit").val(dame.item_max)
+                $("#cantUso_edit").val(dame.cantidad_uso)
             });
     });
 
@@ -101,11 +104,12 @@
         var precio = $("#precio_edit").val();      
         var min = $("#min_edit").val();      
         var max = $("#max_edit").val();      
+        var cantUso = $("#cantUso_edit").val();      
       
         $.ajax({
             type: "POST",
             url: "grabar.php",
-            data: {item:item,marca:marca,costo:costo,precio:precio,min:min,max:max,ope:2}
+            data: {item:item,marca:marca,costo:costo,precio:precio,min:min,max:max,cantUso:cantUso,ope:2}
         }).done(function(msg){
             $('#cerrar').click();
             refrescarDatos();
@@ -139,7 +143,7 @@
         $.ajax({
             type: "POST",
             url: "grabar.php",
-            data: {item:item,marca:marca,costo:0,precio:0,min:0,max:0,ope:3}
+            data: {item:item,marca:marca,costo:0,precio:0,min:0,max:0,cantUso:0,ope:3}
         }).done(function(msg){
             $('#desactivacion').modal("hide");
            // cargar();
@@ -172,7 +176,7 @@
         $.ajax({
             type: "POST",
             url: "grabar.php",
-            data: {item:item,marca:marca,costo:0,precio:0,min:0,max:0,ope:4}
+            data: {item:item,marca:marca,costo:0,precio:0,min:0,max:0,cantUso:0,ope:4}
         }).done(function(msg){
             $('#activacion').modal("hide");
             // cargar();

@@ -400,11 +400,7 @@ require "../clases/conexion.php";
                                         </select>
                                 </div>
                             </div>
-
-                                                     
-
-
-                                                
+                          
                     </div>
                         </div>
 

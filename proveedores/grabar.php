@@ -3,8 +3,6 @@ require '../clases/conexion.php';
 $codigo = $_POST["codigo"];
 $nom = $_POST["nom"];
 $ruc = $_POST['ruc'];
-// $fecha = $_POST['fechain'];
-
 
 $ope = $_POST["ope"];
 $con = new conexion();

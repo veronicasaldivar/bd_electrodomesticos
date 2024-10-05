@@ -2,9 +2,7 @@
 //FUNCIONA TODO!!
 //alert(" hola eli ");
 $(function(){
-//var Path ='imp_pedidocompras.php';
-var Path ='libro.pdf';
-//alert(" Hola !! ");
+var Path ='imp_pedidoventas.php';
 
 var tabla = $('#tabla').dataTable( {
         "columns": [

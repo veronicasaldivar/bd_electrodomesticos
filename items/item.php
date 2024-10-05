@@ -8,7 +8,7 @@ date_default_timezone_set('America/Asuncion');
 $fecha = date('d/m/Y H:i:s')
 ?>
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">

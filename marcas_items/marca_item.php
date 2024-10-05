@@ -3,11 +3,9 @@ require "../clases/sesion.php";
 verifico();
 require "../clases/conexion.php";
 
-
-
 ?>
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta charset="utf-8">
@@ -128,6 +126,13 @@ require "../clases/conexion.php";
                                         </div>
                                      </div>
 
+                                     <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label>Cantidad Uso</label>
+                                            <input class="form-control" type="number"  id="cantUso" placeholder="Cant. Uso">
+                                        </div>
+                                     </div>
+
                                      <div class="col-md-12">
                                         <div class="form-group">
                                             <label></label>
@@ -176,6 +181,7 @@ require "../clases/conexion.php";
                             <th>Cant. Min</th>
                             <th>Cant. Max</th>
                             <th>Tipo Impuesto</th>
+                            <th>Cant. Uso</th>
                             <th>Estado</th>
                             <th width="15%">Acciones</th>
                          </tr>
@@ -255,6 +261,12 @@ require "../clases/conexion.php";
                     <div class="form-group">
                         <label>Item max</label>
                         <input class="form-control" type="number"  id="max_edit" placeholder="Cant. Max">
+                    </div>
+                </div>       
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label>Cantidad Uso</label>
+                        <input class="form-control" type="number"  id="cantUso_edit" placeholder="Cant. Uso">
                     </div>
                 </div>       
             </div>

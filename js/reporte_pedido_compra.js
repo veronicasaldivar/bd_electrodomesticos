@@ -1,30 +1,43 @@
-/**
- * Created by user pc on 04/07/2016.
- */
 
 $(document).on("click",".buscar",function(){
     $("#tabla-reporte").css({display:'block'});
-    var desde,hasta,suc,fun;
+    var desde,hasta,suc,fun, est;
     desde = $("#btn-enabled-date-desde").val();
     hasta = $("#btn-enabled-date-hasta").val();
+    est = $("#est").val();
     suc = $("#suc").val();
     fun = $("#fun").val();
+  //  alert(`${desde} ${hasta} ${suc} ${fun} ${est}`)
+
+    if(desde === "" || hasta === ""){
+        humane.log(
+            "<span class='fa fa-info'></span> ESTABLEZCA UN RANGO DE FECHA",
+            { timeout: 4000, clickToClose: true, addnCls: "humane-flatty-error" }
+          );
+        return
+    }
+
+    if(desde > hasta){
+        humane.log(
+            "<span class='fa fa-info'></span> La fecha desde no puede ser mayor a la fecha hasta",
+            { timeout: 4000, clickToClose: true, addnCls: 'humane-flatty-error' }
+            );
+        return
+    }
     $.ajax({
         url : 'datos.php',
-        data : { desde:desde,hasta:hasta,suc:suc,fun:fun },
+        data : { desde:desde,hasta:hasta,suc:suc,fun:fun,est:est },
         type : 'GET',
         success : function(json) {
-            alert(json);
+           // alert(json);
             function format ( d ) {
                 var x,detalle,subtotal;
                 detalle = '<center><table class="table" cellpadding="5" cellspacing="0" border="0" style="padding-left:50px;color:#ffffff;">' +
                     '<thead>' +
                     '<tr>' +
                     '<td>Cod</td>' +
-                    
-                     '<td>Producto</td>' +
+                    '<td>Producto</td>' +
                     '<td>Marca</td>' +
-                    
                     '<td>Cantidad</td>' +
                     '<td>Precio</td>' +
                     '<td>Subtotal</td>' +
@@ -69,9 +82,12 @@ $(document).on("click",".buscar",function(){
                 return  detalle
             }
 
-            $(document).ready(function() {
-                var dt = $('#pedido').DataTable( {
-                    "ajax": "datos.php?desde="+desde+"&hasta="+hasta+"&suc="+suc+"&fun="+fun+"",
+            $(function() {
+                var dt = $('#pedido').DataTable({
+                    // retrieve: true,
+                    destroy: true,
+                    // paging: true,
+                   "ajax": "datos.php?desde="+desde+"&hasta="+hasta+"&suc="+suc+"&fun="+fun+"&est="+est+"",
                     "columns": [
                         {
                             "class":          "details-control",
@@ -83,14 +99,15 @@ $(document).on("click",".buscar",function(){
                         
                         { "data": "fecha" },
                         { "data": "proveedor" },
-                         //{ "data": "prov_ape" },
+                            //{ "data": "prov_ape" },
                         { "data": "prov_ruc" },
                         { "data": "estado" },
                         { "data": "total" },
                         { "data": "acciones"}
                     ],
                     "order": [[1, 'asc']]
-                } );
+                });
+
                 // Array to track the ids of the details displayed rows
                 var detailRows = [];
 
@@ -115,15 +132,16 @@ $(document).on("click",".buscar",function(){
                             detailRows.push( tr.attr('id') );
                         }
                     }
-                } );
+                });
 
                 // On each draw, loop over the `detailRows` array and show any child rows
                 dt.on( 'draw', function () {
                     $.each( detailRows, function ( i, id ) {
                         $('#'+id+' td.details-control').trigger( 'click' );
-                    } );
-                } );
-            } );
+                    });
+                });
+            });
         }
     });
 });
+

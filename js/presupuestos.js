@@ -1,10 +1,7 @@
 
-//FUNCIONA TODO!!
-//alert(" hola eli ");
 $(function(){
-var Path ='imp_pedidocompras.php';
-//alert(" Hola !! ");
-var tabla = $('#tabla').dataTable( {
+var Path ='imp_presupuestos_cliente.php';
+    var tabla = $('#tabla').dataTable({
         "columns": [
             {
                 "class":          "details-control",
@@ -13,7 +10,6 @@ var tabla = $('#tabla').dataTable( {
                 "defaultContent": "<a><span class='fa fa-plus'></span></a>"
             },
             { "data": "cod" },
-            // { "data": "fun_nom" },
             { "data": "fecha" },
             { "data": "fechav" },
             { "data": "suc" },
@@ -21,14 +17,12 @@ var tabla = $('#tabla').dataTable( {
             { "data": "estado" },
             { "data": "acciones"}
         ]
-    } );
+    });
 
-tabla.fnReloadAjax('datos.php');
- 
-
- var detailRows = [];
+    tabla.fnReloadAjax('datos.php');
+    var detailRows = [];
       
-   $('#tabla tbody').on( 'click', 'tr td.details-control', function () {        
+    $('#tabla tbody').on( 'click', 'tr td.details-control', function () {        
         var tr = $(this).closest('tr');
         var row = $('#tabla').DataTable().row( tr );
         var idx = $.inArray( tr.attr('id'), detailRows );
@@ -41,7 +35,6 @@ tabla.fnReloadAjax('datos.php');
             detailRows.splice( idx, 1 );
         }
         else {
-            
             tr.addClass( 'details' );
             row.child(format(row.data())).show();
             if ( idx === -1 ) {
@@ -49,25 +42,23 @@ tabla.fnReloadAjax('datos.php');
             }
             $(this).html("<a><span class='fa fa-minus'></span></a>");
             // Add to the 'open' array
-           
         }
-    } );
+    });
  
     // On each draw, loop over the `detailRows` array and show any child rows
     tabla.on( 'draw', function () {
         $.each( detailRows, function ( i, cod ) {
             $('#'+cod+' td.details-control').trigger( 'click' );
-        } );
-    } );
+        });
+    });
  
-function format ( d )
-{ 
+    function format ( d ){ 
     // `d` is the original data object for the row
     var deta ='<table  class="table table-striped table-bordered nowrap table-hover">\n\
-<tr width=80px class="info"><th>Codigo</th><th>Descripcion</th><th>Marca</th><th>Cantidad</th><th>Precio Unitario</th><th>Subtotal</th></tr>';
+    <tr width=80px class="info"><th>Codigo</th><th>Descripcion</th><th>Marca</th><th>Cantidad</th><th>Precio Unitario</th><th>Subtotal</th></tr>';
     var total=0;
     var totalgral = (precio);
-     for(var x=0;x<d.detalle.length;x++){
+        for(var x=0;x<d.detalle.length;x++){
          subtotal = d.detalle[x].cantidad * d.detalle[x].precio;
          total += parseInt(subtotal);
 
@@ -115,13 +106,10 @@ function format ( d )
                     '<div class="col-md-12 pull-center">'+
                        
                    '<a href="../informes/'+Path+'?id='+d.cod+'" target="_blank" class="btn btn-sm btn-primary btn-block" id="print" ><span class="fa fa-print"></span><b> Imprimir</b></a>'+
-                   //'<a href="'+Path+'?id='+d.cod+'" target="_blank" class="btn btn-sm btn-info btn-block" id="print" ><span class="fa fa-print"></span><b> Imprimir</b></a>'+
-                    
                 '</div>'+
 
                 '</div>';
 }
-
 
 // INSERTAR GRILLA DE PEDIDO Compras
   $(document).on("click",".agregar",function(){
@@ -197,7 +185,6 @@ function format ( d )
         // ACA DEBO LIMPIAR LOS CAMPOS AL MOMENTO DE AGREGAR
     });
 
-
       $(document).on("click",".eliminar",function(){
         var parent = $(this).parent();
         $(parent).remove();
@@ -265,15 +252,16 @@ $(document).on("click",".delete",function(){
             data: {codigo:id,val:'11/11/1111',suc:0,cli:0,usu:0,detalle:'{{1,1,1}}',ope:2}
         }).done(function(msg){
           // $('#confirmacion').modal("hide");
-              $("#hide").click();
-            humane.log("<span class='fa fa-check'></span> "+msg, { timeout: 4000, clickToClose: true, addnCls: 'humane-flatty-success' });    
+            $("#hide").click();
+            mostrarMensaje(msg)
+            //humane.log("<span class='fa fa-check'></span> "+msg, { timeout: 4000, clickToClose: true, addnCls: 'humane-flatty-success' });    
              refrescarDatos();
         });
 
     });
 //fin  ANULAR
-            //FUNCION INSERTAR
-// Insert
+
+    // Insert
     $(document).on("click","#grabar",function(){
         var nro,suc,emp,fun,detalle;
         nro = $("#nro").val();
@@ -294,8 +282,8 @@ $(document).on("click",".delete",function(){
         // --ORDEN:codigo, presunro, presuvalidez, succod, clicod, usucod, detalle[item_cod, presu_cantidad, presu_precio], operacion
         }).done(function(msg){
           // alert(msg);
-           
-           humane.log("<span class='fa fa-check'></span> "+msg, { timeout: 4000, clickToClose: true, addnCls: 'humane-flatty-success' });
+           mostrarMensaje(msg)
+        //humane.log("<span class='fa fa-check'></span> "+msg, { timeout: 4000, clickToClose: true, addnCls: 'humane-flatty-success' });
         $("#grilladetalle tbody tr").remove();
         //y vaciamos todos los campos
         $('#item').val(0).trigger('change');
@@ -313,11 +301,9 @@ $(document).on("click",".delete",function(){
          });
       }else{
          humane.log("<span class='fa fa-info'></span> Por favor complete todos los campos", { timeout: 4000, clickToClose: true, addnCls: 'humane-flatty-warning' });
-      }
-        });
-    
-// Insert 
-            ///FUNCION Anular
+        }
+    });
+    // Insert 
 
     $("#item").change(function(){
         marca();
@@ -376,7 +362,7 @@ $(document).on("click",".delete",function(){
         
                         $("#precio").val("");
                         $("#stock").val("")
-                      
+                        precio2();
                     } 
                 });
         
@@ -462,6 +448,27 @@ function stock(){
     function refrescarDatos(){
       tabla.fnReloadAjax();
   };
+
+  function mostrarMensaje(msg){
+    var r = msg.split("_/_");
+    var texto = r[0];
+    var tipo = r[1];
+
+    if(tipo.trim() == 'notice'){
+        texto = texto.split("NOTICE:");
+        texto = texto[1];
+
+        humane.log("<span class='fa fa-check'></span>"+ texto, {timeout: 4000, clickToClose: true, addnCls: 'humane-flatty-success'});
+        // humane.log("<span class='fa fa-check'></span> " + msg, {timeout: 4000, clickToClose: true, addnCls: 'humane-flatty-success'});
+    }
+    if(tipo.trim() == 'error'){
+        texto = texto.split("ERROR:");
+        texto = texto[2];
+
+        humane.log("<span class='fa fa-info'></span>"+ texto, {timeout: 4000, clickToClose: true, addnCls: 'humane-flatty-error'});
+    }
+}
+
 // Funciones
 $(function () {
    

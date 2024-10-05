@@ -1,8 +1,7 @@
 ﻿<?php
-
 require "../funciones/fpdf/fpdf.php";
-
 require "../clases/conexion.php";
+
 $id = $_GET["id"];
 $con = new conexion();
 $con->conectar();
@@ -23,41 +22,50 @@ class PDF extends FPDF
 // Tabla simple
     function pedidocompras($cab,$det)
     {
-      //  $this->Image('../img/INFORMES.JPG',60,11,80,25,'JPG');
-        $this->Cell(165,30,"");
+        // Nombre de la empresa y movimiento al que corresponde
+        $this->SetFont('Times', 'B', 12);//TIPO DE LETRA PARA TITULO
+        $this->Cell(/*1*/90, /*2*/10, /*3*/$cab['emp_nom'], /*4*/'LTR', /*5*/0, /*6*/'C');
+        $this->Cell(/*1*/90, /*2*/10, /*3*/'PEDIDOS DE COMPRAS', /*4*/'LTR', /*5*/0, /*6*/'C');
         $this->Ln();
-        $this->Cell(165,10,"Comprobante de Pedidos de Compras");
+        
+        // DIRECCION Y RUC DE LA EMPRESA
+        $this->SetFont('Times', '', 10);//TIPO DE LETRA PARA SUBTITULO
+        $this->Cell(/*1*/35, /*2*/8, /*3*/utf8_decode('Dirección:'), /*4*/'L', /*5*/0, /*6*/'L');
+        $this->Cell(/*1*/55, /*2*/8, /*3*/utf8_decode($cab['emp_dir']), /*4*/'R', /*5*/0, /*6*/'L');
+            
+        $this->Cell(/*1*/35, /*2*/5, /*3*/utf8_decode('RUC: '), /*4*/'L', /*5*/0, /*6*/'L');
+        $this->Cell(/*1*/55, /*2*/5, /*3*/utf8_decode($cab['emp_ruc']), /*4*/'R', /*5*/0, /*6*/'L');
         $this->Ln();
 
-        $this->Cell(20,6,utf8_decode('Pedido N°: '));
-        $this->Cell(33,6,$cab["ped_nro"]);
-        $this->Cell(15,6,utf8_decode('Fecha: '));
-        $this->Cell(30,6,$cab["fecha"]);
+        // TELEFONO Y NUMERO DE ORDEN
+        $this->SetFont('Times', '', 10);//TIPO DE LETRA PARA SUBTITULO
+        $this->Cell(/*1*/35, /*2*/8, /*3*/utf8_decode('Teléfono:'), /*4*/'L', /*5*/0, /*6*/'L');
+        $this->Cell(/*1*/55, /*2*/8, /*3*/utf8_decode($cab['emp_tel']), /*4*/'R', /*5*/0, /*6*/'L');
+            
+        $this->Cell(/*1*/35, /*2*/5, /*3*/utf8_decode('Pedido N.°: '), /*4*/'L', /*5*/0, /*6*/'L');
+        $this->Cell(/*1*/55, /*2*/5, /*3*/utf8_decode($cab['pedido_nro']), /*4*/'R', /*5*/0, /*6*/'L');
         $this->Ln();
-        $this->Cell(15,6,utf8_decode('Estado: '));
-        $this->Cell(30,6,$cab["ped_estado"]);
+
+        //CUARTA LINEA
+        $this->Cell(/*1*/35, /*2*/8, /*3*/utf8_decode('Correo: '), /*4*/'LB', /*5*/0, /*6*/'L');
+        $this->Cell(/*1*/55, /*2*/8, /*3*/utf8_decode($cab['emp_email']), /*4*/'RB', /*5*/0, /*6*/'L');
+
+        $this->Cell(/*1*/90, /*2*/8, /*3*/'', /*4*/'RB', /*5*/0, /*6*/'L');
         $this->Ln();
-        $this->Cell(18,6,utf8_decode('Empresa: '));
-        $this->Cell(20,6,utf8_decode($cab["emp_nom"]));
-        $this->Cell(9,6,utf8_decode('RUC: '));
-        $this->Cell(12,6,$cab["emp_ruc"]);
+
+        // FECHA Y ESTADO DEL PEDIDO
+        $this->Cell(/*1*/90, /*2*/8, /*3*/utf8_decode(' Fecha: '.$cab['fecha'].''), /*4*/'L', /*5*/0, /*6*/'L');
+        $this->Cell(/*1*/90, /*2*/8, /*3*/utf8_decode(' Estado: '.$cab['ped_estado'].''), /*4*/'R', /*5*/0, /*6*/'L');
         $this->Ln();
-        $this->Cell(18,6,utf8_decode('Direccion: '));
-        $this->Cell(60,6,utf8_decode($cab["emp_dir"]));
-        $this->Ln();
-        $this->Cell(15,6,utf8_decode('Email: '));
-        $this->Cell(50,6,utf8_decode($cab["emp_email"]));
-       // $this->Ln();
-        $this->Ln();
-        $this->Ln();
+
         //Titulo
-        $header = array('Código','Cantidad','Descripción','Precio','Subtotal');
+        $header = array('Código','Cantidad','Descripción','Costo','Subtotal');
         // Cabecera
-        $this->Cell(14,7,utf8_decode($header[0]),1);
+        $this->Cell(15,7,utf8_decode($header[0]),1);
         $this->Cell(20,7,utf8_decode($header[1]),1);
         $this->Cell(100,7,utf8_decode($header[2]),1);
         $this->Cell(25,7,utf8_decode($header[3]),1);
-        $this->Cell(25,7,utf8_decode($header[4]),1);
+        $this->Cell(20,7,utf8_decode($header[4]),1);
         $this->Ln();
         // Datos
         $total = 0;
@@ -65,15 +73,17 @@ class PDF extends FPDF
         {
             $subtotal = $row["ped_cantidad"] * $row["ped_precio"];
             $total = $total + $subtotal;
-            $this->Cell(14,6,$row["item_cod"],2);
-            $this->Cell(20,6,$row["ped_cantidad"],2);
-            $this->Cell(100,6,utf8_decode($row["item_desc"]),2);
-            $this->Cell(25,6,number_format($row["ped_precio"],0,',','.'),2);
-            $this->Cell(25,6,number_format($subtotal,0,',','.'),2);
+            $this->Cell(15,6,$row["item_cod"],'LR');
+            $this->Cell(20,6,$row["ped_cantidad"],'R');
+            $this->setFont('Times', '', 8);
+            $this->Cell(100,6,utf8_decode($row["item_desc"]),'R');
+            $this->setFont('Times', '', 10);
+            $this->Cell(25,6,number_format($row["ped_precio"],0,',','.'),'R');
+            $this->Cell(20,6,number_format($subtotal,0,',','.'),'R');
             $this->Ln();
         }
-        $this->Cell(159,6,'Totales',1);
-        $this->Cell(25,6,number_format($total,0,',','.'),1);
+        $this->Cell(160,6,'Totales',1);
+        $this->Cell(20,6,number_format($total,0,',','.'),1);
         $this->Ln();
     }
 }
